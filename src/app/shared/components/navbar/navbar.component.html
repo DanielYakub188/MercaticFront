@@ -1,0 +1,48 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light px-4">
+  <div class="container-fluid d-flex justify-content-between align-items-center">
+    <!-- LOGO -->
+    <a class="navbar-brand d-flex align-items-center" href="#">
+      <img src="assets/logo.png" alt="MERCATIC" width="40" height="40" class="me-2" />
+      <strong style="color: #2d572c;">MERCATIC</strong>
+    </a>
+
+    <!-- BOTÓN HAMBURGUESA -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- CONTENEDOR COLAPSABLE -->
+    <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+      <ul class="navbar-nav flex-column flex-lg-row gap-3 me-lg-2 mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link text-success fw-semibold px-2" routerLink="/home">Inicio</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-success fw-semibold px-2" routerLink="/conocenos">Conócenos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-success fw-semibold px-2" routerLink="/trabaja-con-nosotros" >Trabaja con Nosotros</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-success fw-semibold px-2" routerLink="/atencion-al-cliente">Atención al Cliente</a>
+        </li>
+      </ul>
+
+      <span class="text-muted mx-lg-3 d-none d-lg-block">|</span>
+
+      <div class="d-flex flex-column flex-lg-row align-items-center gap-2 gap-lg-3">
+        <a class="btn btn-link text-success fw-semibold" href="#">Registro</a>
+        <a class="btn btn-success text-white fw-semibold rounded px-3" href="#">
+          Identifícate
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
