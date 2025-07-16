@@ -5,14 +5,31 @@
 }
 
 /* 980px a 1030px */
-@media (min-width: 980px) and (max-width: 1030px) {
+@media (min-width: 1031px) and (max-width: 1160px) {
   .navbar-nav .nav-link,
   .navbar .btn {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
+}
+/* 980px a 1030px */
+@media (min-width: 950px) and (max-width: 1040px) {
+  .navbar-nav .nav-link,
+  .navbar .btn {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width:450px)
+{
+#logo{width:45px;height:45px}
+}
+@media(max-width:400px)
+{
+#logo{width:42px;height:42px;}
 }
 nav {
   box-shadow: 0 2px 4px rgba(45, 87, 44, 0.2); /* Sombra verde suave abajo */
+  background-color: red;
 }
 
 

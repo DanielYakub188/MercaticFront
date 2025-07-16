@@ -1,0 +1,41 @@
+h1 {
+  font-family: 'Georgia', serif;
+}
+
+input::placeholder {
+  color: #aaa;
+}
+#banner
+{
+  background-image: url('../../../assets/banner.jpg');
+  background-repeat: no-repeat;
+  background-size:cover;
+  background-position: right;
+}
+
+@media(max-width:1000px)
+{
+  #banner {background-image:none;
+  }
+}
+#banner {
+  background-image: url('../../../assets/banner.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  color: white;
+}
+*{color:white;}
+#banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.3); /* Capa oscura */
+  z-index: 0;
+}
+
+#banner .container {
+  position: relative;
+  z-index: 1;
+}
