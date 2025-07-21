@@ -1,0 +1,18 @@
+h1 {
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.accordion-button {
+  background-color: #f8f9fa;
+  color: #198754; // Bootstrap green
+  font-weight: 600;
+}
+
+.accordion-button:not(.collapsed) {
+  background-color: #e9f7ef;
+}
+
+.accordion-body {
+  background-color: #ffffff;
+  border-left: 4px solid #198754;
+}
