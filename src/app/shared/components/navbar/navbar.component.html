@@ -1,9 +1,18 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light px-4">
-  <div class="container-fluid d-flex justify-content-between align-items-center">
+  <div
+    class="container-fluid d-flex justify-content-between align-items-center"
+  >
     <!-- LOGO -->
     <a class="navbar-brand d-flex align-items-center" href="#">
-      <img src="../../../../assets/LOGO.png" alt="MERCATIC" width="50" height="50" class="me-4" id="logo" />
-      <strong style="color: #2bbd29;" class="fs-2">MERCATIC</strong>
+      <img
+        src="../../../../assets/LOGO.png"
+        alt="MERCATIC"
+        width="50"
+        height="50"
+        class="me-4"
+        id="logo"
+      />
+      <strong style="color: #2bbd29" class="fs-2">MERCATIC</strong>
     </a>
 
     <!-- BOTÓN HAMBURGUESA -->
@@ -14,36 +23,165 @@
       data-bs-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent"
       aria-expanded="false"
-      aria-label="Toggle navigation">
+      aria-label="Toggle navigation"
+    >
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <!-- CONTENEDOR COLAPSABLE -->
-    <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+    <div
+      class="collapse navbar-collapse justify-content-end"
+      id="navbarSupportedContent"
+    >
       <ul class="navbar-nav flex-column flex-lg-row gap-3 me-lg-2 mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link text-success fw-semibold px-2" routerLink="/home">Inicio</a>
+          <a class="nav-link text-success fw-semibold px-2" routerLink="/home"
+            >Inicio</a
+          >
         </li>
         <li class="nav-item">
-          <a class="nav-link text-success fw-semibold px-2" routerLink="/catalogo" >Catálogo</a>
+          <a
+            class="nav-link text-success fw-semibold px-2"
+            routerLink="/catalogo"
+            >Catálogo</a
+          >
         </li>
         <li class="nav-item">
-          <a class="nav-link text-success fw-semibold px-2" routerLink="/conocenos">Conócenos</a>
+          <a
+            class="nav-link text-success fw-semibold px-2"
+            routerLink="/conocenos"
+            >Conócenos</a
+          >
         </li>
-
         <li class="nav-item">
-          <a class="nav-link text-success fw-semibold px-2" routerLink="/atencion-al-cliente">Atención al Cliente</a>
+          <a
+            class="nav-link text-success fw-semibold px-2"
+            routerLink="/atencion-al-cliente"
+            >Atención al Cliente</a
+          >
         </li>
       </ul>
 
       <span class="text-muted mx-lg-3 d-none d-lg-block">|</span>
 
-      <div class="d-flex flex-column flex-lg-row align-items-center gap-2 gap-lg-3">
-        <a class="btn btn-link text-success fw-semibold" href="#">Registro</a>
-        <a class="btn btn-success text-white fw-semibold rounded px-3" href="#">
-          Identifícate
-        </a>
+      <!-- BOTONES O DROPDOWN SEGÚN LOGIN -->
+      <div
+        class="d-flex flex-column flex-lg-row align-items-center gap-2 gap-lg-3"
+      >
+        <!-- Si NO está logueado -->
+        <ng-container *ngIf="!isLoggedIn; else userMenu">
+          <a
+            class="btn btn-link text-success fw-semibold"
+            routerLink="/register"
+            >Registro</a
+          >
+          <a
+            class="btn btn-success text-white fw-semibold rounded px-3"
+            routerLink="/login"
+          >
+            Identifícate
+          </a>
+        </ng-container>
+
+        <!-- Si está logueado -->
+        <ng-template #userMenu>
+          <div class="dropdown">
+            <button
+              class="btn btn-outline-success dropdown-toggle d-flex align-items-center"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <i class="bi bi-person-circle me-2"></i>
+              {{ userEmail || "Usuario" }}
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li *ngIf="userRole === 'administrador'">
+                <a
+                  class="dropdown-item text-primary fw-semibold custom"
+                  routerLink="/panel-administrador"
+                >
+                  Panel de Administrador
+                </a>
+              </li>
+              <li *ngIf="userRole === 'vendedor'">
+                <a
+                  class="dropdown-item text-primary fw-semibold custom"
+                  routerLink="/"
+                >
+                  Panel de Administrador
+                </a>
+              </li>
+              <li>
+                <a
+                  class="dropdown-item text-success fw-semibold custom-green"
+                  routerLink="/lista-compra"
+                >
+                  Tu Carrito
+                </a>
+              </li>
+              <li>
+                <a
+                  class="dropdown-item text-success fw-semibold custom-green"
+                  routerLink="/perfil"
+                >
+                  Tu perfil
+                </a>
+              </li>
+              <li><hr class="dropdown-divider" /></li>
+              <li>
+                <a
+                  class="dropdown-item text-danger fw-semibold custom-red"
+                  href="#"
+                  data-bs-toggle="modal"
+                  data-bs-target="#logoutModal"
+                >
+                  Cerrar Sesión
+                </a>
+              </li>
+            </ul>
+          </div>
+        </ng-template>
       </div>
     </div>
   </div>
 </nav>
+
+<!-- MODAL DE CONFIRMACIÓN PARA CERRAR SESIÓN -->
+<div
+  class="modal fade"
+  id="logoutModal"
+  tabindex="-1"
+  aria-labelledby="logoutModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="logoutModalLabel">
+          Confirmar cierre de sesión
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Cerrar"
+        ></button>
+      </div>
+      <div class="modal-body">¿Estás seguro de que deseas cerrar sesión?</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          (click)="logout(); $event.preventDefault()"
+          data-bs-dismiss="modal"
+        >
+          Cerrar Sesión
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

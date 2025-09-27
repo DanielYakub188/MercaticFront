@@ -1,0 +1,36 @@
+.register-container {
+  border: 2px solid #c8e6c9;
+  border-radius: 1rem;
+  overflow: hidden;
+  transform: scale(0.85);
+  margin-top: -53px;
+
+  .mercadona-image {
+    object-fit: cover;
+    filter: brightness(0.95);
+    border-left: 2px solid #c8e6c9; // línea divisoria
+  }
+
+  form {
+    max-width: 570px;
+    margin: auto;
+  }
+
+  .form-label {
+    font-weight: 500;
+  }
+
+  input.ng-touched.ng-invalid {
+    border-color: #dc3545;
+  }
+
+  /* Igual que en login: evita que la caja salte cuando aparece error */
+  .fixed-height {
+    min-height: 97px;
+  }
+
+  /* Línea divisoria a la derecha del formulario */
+  .col-lg-6.bg-white {
+    border-right: 2px solid #c8e6c9;
+  }
+}

@@ -3,6 +3,24 @@
 .navbar .btn {
   font-size: 1rem;
 }
+/* Para el enlace de perfil */
+.dropdown-item.custom-green:hover,
+.dropdown-item.custom-green:active {
+  background-color: #d4f8d4 !important; /* verde suave */
+  color: #198754 !important; /* verde bootstrap */
+}
+/* Para el enlace de administrador */
+.dropdown-item.custom:hover,
+.dropdown-item.custom:active {
+  background-color: #cce5ff !important; /* azul suave */
+  color: #0d6efd !important; /* azul bootstrap */
+}
+/* Para el enlace de cerrar sesión */
+.dropdown-item.custom-red:hover,
+.dropdown-item.custom-red:active {
+  background-color: #f8d7da !important; /* rojo suave */
+  color: #dc3545 !important; /* rojo bootstrap */
+}
 
 /* 980px a 1030px */
 @media (min-width: 1031px) and (max-width: 1160px) {
@@ -19,23 +37,19 @@
   }
 }
 
-@media (max-width:450px)
-{
-#logo{width:45px;height:45px}
+@media (max-width: 450px) {
+  #logo {
+    width: 45px;
+    height: 45px;
+  }
 }
-@media(max-width:400px)
-{
-#logo{width:42px;height:42px;}
+@media (max-width: 400px) {
+  #logo {
+    width: 42px;
+    height: 42px;
+  }
 }
 nav {
   box-shadow: 0 2px 4px rgba(45, 87, 44, 0.2); /* Sombra verde suave abajo */
   background-color: red;
 }
-
-
-
-
-
-
-
-

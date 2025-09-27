@@ -1,0 +1,166 @@
+<div class="container mt-5 text-success">
+  <h2 class="mb-4 fw-bold">Panel de Administrador - Usuarios</h2>
+
+  <!-- Buscador -->
+  <div class="mb-3 d-flex justify-content-between align-items-center">
+    <div class="input-group input-group-sm w-50">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Buscar usuario..."
+        [(ngModel)]="searchText"
+        (input)="loadUsers()"
+      />
+      <button
+        class="btn btn-outline-secondary"
+        *ngIf="searchText"
+        (click)="searchText=''; loadUsers()"
+      >
+        <i class="bi bi-x-circle"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Tabla -->
+  <div class="table-responsive shadow-sm rounded">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-success">
+        <tr>
+          <th (click)="sort('id')" class="sortable">ID
+            <span *ngIf="sortBy === 'id'">
+              {{ sortDirection === 'asc' ? '▲' : '▼' }}
+            </span>
+          </th>
+          <th (click)="sort('email')" class="sortable">Email
+            <span *ngIf="sortBy === 'email'">
+              {{ sortDirection === 'asc' ? '▲' : '▼' }}
+            </span>
+          </th>
+          <th (click)="sort('nombre')" class="sortable">Nombre
+            <span *ngIf="sortBy === 'nombre'">
+              {{ sortDirection === 'asc' ? '▲' : '▼' }}
+            </span>
+          </th>
+          <th (click)="sort('primerApellido')" class="sortable">Primer Apellido
+            <span *ngIf="sortBy === 'primerApellido'">
+              {{ sortDirection === 'asc' ? '▲' : '▼' }}
+            </span>
+          </th>
+          <th (click)="sort('segundoApellido')" class="sortable">Segundo Apellido
+            <span *ngIf="sortBy === 'segundoApellido'">
+              {{ sortDirection === 'asc' ? '▲' : '▼' }}
+            </span>
+          </th>
+          <th (click)="sort('role')" class="sortable">Rol
+            <span *ngIf="sortBy === 'role'">
+              {{ sortDirection === 'asc' ? '▲' : '▼' }}
+            </span>
+          </th>
+          <th (click)="sort('localidad')" class="sortable">Localidad
+            <span *ngIf="sortBy === 'localidad'">
+              {{ sortDirection === 'asc' ? '▲' : '▼' }}
+            </span>
+          </th>
+          <th>Dirección</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.id }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.nombre }}</td>
+          <td>{{ user.primerApellido }}</td>
+          <td>{{ user.segundoApellido }}</td>
+          <td><span class="badge bg-success">{{ user.role }}</span></td>
+          <td>{{ user.localidad }}</td>
+          <td>{{ user.direccion }}</td>
+          <td>
+            <button class="btn btn-success btn-sm" (click)="openModal(user)">
+              Administrar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Paginación -->
+  <nav class="mt-3">
+    <ul class="pagination pagination-sm justify-content-end">
+      <li class="page-item" [class.disabled]="page === 0">
+        <button class="page-link text-success" (click)="prevPage()">Anterior</button>
+      </li>
+      <li class="page-item disabled">
+        <span class="page-link bg-light text-success fw-bold">{{ page + 1 }}</span>
+      </li>
+      <li class="page-item">
+        <button class="page-link text-success" (click)="nextPage()">Siguiente</button>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content shadow-lg border-0 rounded-3">
+      <!-- Encabezado -->
+      <div class="modal-header justify-content-center bg-success text-white position-relative">
+        <div class="modal-title text-center w-100">
+          <div class="icon-circle bg-white text-success mb-3">
+            <i class="bi bi-person-circle fs-1"></i>
+          </div>
+          <h4 class="fw-bold mb-0">Administrar Usuario</h4>
+        </div>
+        <button type="button" class="btn-close btn-close-white position-absolute end-0 me-3" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+
+      <!-- Cuerpo -->
+      <div class="modal-body p-4">
+        <form *ngIf="selectedUser">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label>Email</label>
+              <input type="email" class="form-control" [(ngModel)]="selectedUser.email" name="email">
+            </div>
+            <div class="col-md-6">
+              <label>Rol</label>
+              <select class="form-select" [(ngModel)]="selectedUser.role" name="role">
+                <option value="cliente">Cliente</option>
+                <option value="vendedor">Vendedor</option>
+                <option value="administrador">Administrador</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label>Nombre</label>
+              <input type="text" class="form-control" [(ngModel)]="selectedUser.nombre" name="nombre">
+            </div>
+            <div class="col-md-6">
+              <label>Primer Apellido</label>
+              <input type="text" class="form-control" [(ngModel)]="selectedUser.primerApellido" name="primerApellido">
+            </div>
+            <div class="col-md-6">
+              <label>Segundo Apellido</label>
+              <input type="text" class="form-control" [(ngModel)]="selectedUser.segundoApellido" name="segundoApellido">
+            </div>
+            <div class="col-md-6">
+              <label>Localidad</label>
+              <input type="text" class="form-control" [(ngModel)]="selectedUser.localidad" name="localidad">
+            </div>
+            <div class="col-12">
+              <label>Dirección</label>
+              <input type="text" class="form-control" [(ngModel)]="selectedUser.direccion" name="direccion">
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer border-0">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn btn-success" (click)="saveUser()">Guardar cambios</button>
+      </div>
+    </div>
+  </div>
+</div>

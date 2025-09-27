@@ -1,0 +1,45 @@
+<div class="container my-4 p-4 rounded-4"
+     style="background-color:#fff; border: 2px solid #28a745; box-shadow: 0 4px 12px rgba(40,167,69,0.2);">
+
+  <!-- Sección superior estilo Spotify -->
+  <div class="d-flex align-items-center border-bottom border-light pb-3 mb-3">
+    <!-- Avatar con iniciales -->
+    <div class="rounded-circle d-flex justify-content-center align-items-center me-3"
+         style="width:100px; height:100px; font-size:36px; font-weight:bold;
+                background-color:#28a745; color:#fff;">
+      {{ user?.nombre?.charAt(0) }}{{ user?.primerApellido?.charAt(0) }}
+    </div>
+
+    <div>
+
+      <h4 class="fw-bold text-success"> Perfil </h4>
+      <h2 class="fw-bold mb-1">{{ user?.nombre }} {{ user?.primerApellido }} {{ user?.segundoApellido }}</h2>
+
+      <span id="rol" class="badge bg-success text-white me-2">{{ user?.role }}</span>
+
+    </div>
+  </div>
+
+  <!-- Sección inferior con datos en lista vertical -->
+  <ul class="list-unstyled mb-0">
+    <li class="mb-2">
+      <i class="bi bi-envelope-fill text-success me-3"></i>
+      <strong>Email:</strong> {{ user?.email }}
+    </li>
+    <li class="mb-2">
+      <i class="bi bi-geo-alt-fill text-success me-3"></i>
+      <strong>Localidad:</strong> {{ user?.localidad }}
+    </li>
+    <li class="mb-2">
+      <i class="bi bi-house-fill text-success me-3"></i>
+      <strong>Dirección:</strong> {{ user?.direccion }}
+    </li>
+  </ul>
+
+  <!-- Botón editar -->
+  <div class="text-center mt-4">
+    <button class="btn btn-outline-success btn-sm">
+      <i class="bi bi-pencil-square me-1"></i> Editar Datos de Entrega
+    </button>
+  </div>
+</div>

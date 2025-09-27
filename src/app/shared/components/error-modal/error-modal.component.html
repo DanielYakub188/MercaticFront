@@ -1,0 +1,19 @@
+<div class="modal fade show d-block animated-modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header bg-danger text-white position-relative">
+        <div class="icon-circle bg-white text-danger">
+          <i class="bi bi-exclamation-triangle-fill fs-2"></i>
+        </div>
+        <h5 class="modal-title ms-5">{{ title }}</h5>
+        <button type="button" class="btn-close btn-close-white" (click)="close()"></button>
+      </div>
+      <div class="modal-body text-center">
+        <p>{{ message }}</p>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button class="btn btn-danger px-4" (click)="close()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>

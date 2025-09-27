@@ -1,0 +1,100 @@
+<div id="Todo" class="container">
+  <div class="row justify-content-center align-items-stretch register-container overflow-hidden shadow-lg rounded-4">
+
+    <!-- Formulario -->
+    <div class="col-lg-6 p-4 bg-white position-relative">
+      <div class="text-center mb-3">
+        <h2 class="text-success fw-bold fs-4">Registro de cliente</h2>
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
+        <!-- Nombre -->
+        <div class="mb-3 fixed-height">
+          <label for="nombre" class="form-label text-success small">Nombre</label>
+          <input type="text" id="nombre" class="form-control ps-3" formControlName="nombre" />
+          <div *ngIf="nombre?.invalid && nombre?.touched" class="text-danger smaller mt-1">
+            Mínimo 2 caracteres.
+          </div>
+        </div>
+
+        <!-- Apellidos -->
+        <div class="row gx-2">
+          <div class="mb-3 col-md-6 fixed-height">
+            <label for="apellido1" class="form-label text-success small">Primer apellido</label>
+            <input type="text" id="apellido1" class="form-control ps-3" formControlName="apellido1" />
+            <div *ngIf="apellido1?.invalid && apellido1?.touched" class="text-danger smaller mt-1">
+              Obligatorio.
+            </div>
+          </div>
+          <div class="mb-3 col-md-6 fixed-height">
+            <label for="apellido2" class="form-label text-success small">Segundo apellido</label>
+            <input type="text" id="apellido2" class="form-control ps-3" formControlName="apellido2" />
+          </div>
+        </div>
+
+        <!-- Localidad -->
+        <div class="mb-3 fixed-height">
+          <label for="localidad" class="form-label text-success small">Localidad</label>
+          <input type="text" id="localidad" class="form-control ps-3" formControlName="localidad" />
+          <div *ngIf="localidad?.invalid && localidad?.touched" class="text-danger smaller mt-1">
+            Obligatorio.
+          </div>
+        </div>
+
+        <!-- Dirección -->
+        <div class="mb-3 fixed-height">
+          <label for="direccion" class="form-label text-success small">Dirección</label>
+          <input type="text" id="direccion" class="form-control ps-3" formControlName="direccion" />
+          <div *ngIf="direccion?.invalid && direccion?.touched" class="text-danger smaller mt-1">
+            Obligatorio.
+          </div>
+        </div>
+
+        <!-- Correo -->
+        <div class="mb-3 fixed-height">
+          <label for="email" class="form-label text-success small">Correo electrónico</label>
+          <input type="email" id="email" class="form-control ps-3" formControlName="email" />
+          <div *ngIf="email?.invalid && email?.touched" class="text-danger smaller mt-1">
+            Correo inválido.
+          </div>
+        </div>
+
+        <!-- Contraseñas -->
+        <div class="row gx-2">
+          <div class="mb-3 col-md-6 fixed-height">
+            <label for="password" class="form-label text-success small">Contraseña</label>
+            <input type="password" id="password" class="form-control ps-3" formControlName="password" />
+            <div *ngIf="password?.invalid && password?.touched" class="text-danger smaller mt-1">
+              Mínimo 6 caracteres.
+            </div>
+          </div>
+          <div class="mb-3 col-md-6 fixed-height">
+            <label for="confirmPassword" class="form-label text-success small">Repetir contraseña</label>
+            <input type="password" id="confirmPassword" class="form-control ps-3" formControlName="confirmPassword" />
+            <div *ngIf="registerForm.errors?.['passwordMismatch'] && confirmPassword?.touched" class="text-danger smaller mt-1">
+              No coinciden.
+            </div>
+          </div>
+        </div>
+
+        <!-- Botón -->
+        <button type="submit" class="btn btn-success w-100 py-2 fs-6" [disabled]="registerForm.invalid">
+          Registrarse
+        </button>
+
+        <!-- Link a login -->
+        <p class="mt-3 text-center text-muted small">
+          ¿Ya tienes cuenta?
+          <a routerLink="/login" class="text-success fw-semibold small">Inicia sesión</a>
+        </p>
+      </form>
+    </div>
+
+    <!-- Imagen decorativa -->
+    <div class="col-lg-6 d-none d-lg-block p-0">
+      <img src="../../../assets/banner2.jpeg"
+           alt="Mercadona"
+           class="img-fluid h-100 w-100 object-fit-cover mercadona-image" />
+    </div>
+  </div>
+</div>
