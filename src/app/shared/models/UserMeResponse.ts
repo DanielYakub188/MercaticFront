@@ -8,4 +8,5 @@ export interface UserMeResponse
   segundoApellido: string;
   localidad: string;
   direccion: string;
+  balance: number;
 }
