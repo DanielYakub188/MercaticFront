@@ -2,11 +2,13 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { SellerService } from '../../shared/services/seller/seller.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
+import { Producto } from '../../shared/models/Productos';
+import { ListaProductosVendedorComponent } from '../../shared/components/lista-productos-vendedor/lista-productos-vendedor.component';
+declare var bootstrap: any;
 @Component({
   selector: 'app-seller-panel',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ListaProductosVendedorComponent],
   templateUrl: './seller-panel.component.html',
   styleUrl: './seller-panel.component.scss',
 })
@@ -14,6 +16,8 @@ export class SellerPanelComponent {
   constructor(private vendedorService: SellerService) {}
 
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+
+  listaProductos: Producto[] = [];
 
   producto: any = {
     nombre_producto: '',
@@ -25,7 +29,20 @@ export class SellerPanelComponent {
   imagen: File | null = null;
   imagenPreview: string | null = null;
 
+  ngOnInit(){
+    this.cargarProductos()
+  }
 
+  cargarProductos() {
+    this.vendedorService.listarProductos().subscribe({
+      next: (data) => {
+        this.listaProductos = data;
+      },
+      error: (err) => {
+        console.error('Error al cargar la lista de productos', err);
+      },
+    });
+  }
   onDragOver(event: DragEvent) {
     event.preventDefault();
     (event.target as HTMLElement).classList.add('dragover');
@@ -56,23 +73,55 @@ export class SellerPanelComponent {
     reader.onload = (e) => (this.imagenPreview = e.target?.result as string);
     reader.readAsDataURL(file);
   }
-
   crearProducto() {
-    if (!this.imagen) {
-      alert('Debes subir una imagen');
+    // 🔥 VALIDACIÓN COMPLETA
+    if (
+      !this.producto.nombre_producto ||
+      !this.producto.precio ||
+      !this.producto.formato_producto ||
+      !this.producto.categoria ||
+      !this.producto.stock ||
+      !this.imagen
+    ) {
+      alert('Debes rellenar todos los campos antes de crear el producto.');
       return;
     }
 
     const formData = new FormData();
-
     formData.append('nombre_producto', this.producto.nombre_producto);
     formData.append('precio', this.producto.precio);
+    formData.append('stock', this.producto.stock);
     formData.append('formato_producto', this.producto.formato_producto);
     formData.append('categoria', this.producto.categoria);
     formData.append('imagen', this.imagen);
 
-    this.vendedorService.crearProducto(formData).subscribe((res) => {
-      alert('Producto creado con éxito');
+    this.vendedorService.crearProducto(formData).subscribe({
+      next: () => {
+        alert('Producto creado con éxito');
+
+        // 🔥 RECARGAR LISTA DE PRODUCTOS
+        this.cargarProductos();
+
+        // 🔥 CERRAR MODAL
+        const modal = bootstrap.Modal.getInstance(
+          document.getElementById('crearProductoModal')
+        );
+        modal?.hide();
+
+        // 🔥 RESETEAR FORMULARIO
+        this.producto = {
+          nombre_producto: '',
+          precio: null,
+          formato_producto: '',
+          categoria: '',
+          stock: null
+        };
+        this.imagen = null;
+        this.imagenPreview = null;
+      },
+      error: () => {
+        alert('Error al crear el producto');
+      },
     });
   }
 }
