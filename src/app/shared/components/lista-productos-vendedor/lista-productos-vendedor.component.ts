@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { Producto } from '../../models/Productos';
 import { CommonModule } from '@angular/common';
 import { SellerService } from '../../services/seller/seller.service';
@@ -14,36 +14,42 @@ declare var bootstrap: any;
   styleUrl: './lista-productos-vendedor.component.scss',
 })
 export class ListaProductosVendedorComponent {
+  // Recibe los productos desde el padre
   @Input() productos: Producto[] = [];
 
-  productoEdit: any = null;
+  productoEdit: Producto | null = null;
   imagenNueva: File | null = null;
   imagenPreview: string | null = null;
+
+  // Filtro y paginación
   busqueda: string = '';
   productosFiltrados: Producto[] = [];
   productosPaginados: Producto[] = [];
   paginaActual: number = 0;
   itemsPorPagina: number = 10;
   totalPaginas: number = 1;
+
   modal: any;
 
   constructor(private sellerService: SellerService) {}
 
   ngOnInit() {
-    this.cargarProductos();
+    this.refrescarListado();
   }
 
-  cargarProductos() {
-    this.sellerService.listarProductos().subscribe({
-      next: (data) => {
-        this.productos = data;
-        this.filtrarProductos();
-      },
-      error: (err) => {
-        console.error('Error al cargar productos', err);
-      },
-    });
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['productos']) {
+      this.refrescarListado();
+    }
   }
+
+  /** ✅ Recarga listado y aplica filtro + paginación */
+  refrescarListado() {
+    this.productosFiltrados = [...this.productos];
+    this.filtrarProductos();
+  }
+
+  /** 🔎 Filtrar productos */
   filtrarProductos() {
     const text = this.busqueda.toLowerCase().trim();
 
@@ -57,32 +63,36 @@ export class ListaProductosVendedorComponent {
     this.paginaActual = 0;
     this.actualizarPaginacion();
   }
+
+  /** 📄 Paginación */
   actualizarPaginacion() {
-  this.totalPaginas = Math.ceil(
-    this.productosFiltrados.length / this.itemsPorPagina
-  );
+    this.totalPaginas = Math.ceil(
+      this.productosFiltrados.length / this.itemsPorPagina
+    );
 
-  const inicio = this.paginaActual * this.itemsPorPagina;
-  const fin = inicio + this.itemsPorPagina;
+    const inicio = this.paginaActual * this.itemsPorPagina;
+    const fin = inicio + this.itemsPorPagina;
 
-  this.productosPaginados = this.productosFiltrados.slice(inicio, fin);
-}
-
-paginaAnterior() {
-  if (this.paginaActual > 0) {
-    this.paginaActual--;
-    this.actualizarPaginacion();
+    this.productosPaginados = this.productosFiltrados.slice(inicio, fin);
   }
-}
 
-paginaSiguiente() {
-  if (this.paginaActual < this.totalPaginas - 1) {
-    this.paginaActual++;
-    this.actualizarPaginacion();
+  paginaAnterior() {
+    if (this.paginaActual > 0) {
+      this.paginaActual--;
+      this.actualizarPaginacion();
+    }
   }
-}
+
+  paginaSiguiente() {
+    if (this.paginaActual < this.totalPaginas - 1) {
+      this.paginaActual++;
+      this.actualizarPaginacion();
+    }
+  }
+
+  /** 🟩 Abrir modal */
   abrirModal(producto: Producto) {
-    this.productoEdit = { ...producto };
+    this.productoEdit = { ...producto } as Producto;
     this.imagenNueva = null;
     this.imagenPreview = null;
 
@@ -91,8 +101,9 @@ paginaSiguiente() {
     this.modal.show();
   }
 
+  /** 🖼 Nueva imagen */
   onImagenSeleccionada(event: any) {
-    this.imagenNueva = event.target.files[0] ?? null;
+    this.imagenNueva = event.target.files?.[0] ?? null;
     if (!this.imagenNueva) return;
 
     const reader = new FileReader();
@@ -100,37 +111,69 @@ paginaSiguiente() {
     reader.readAsDataURL(this.imagenNueva);
   }
 
+  /** 💾 Guardar cambios */
   guardarCambios() {
-    const formData = new FormData();
+    if (!this.productoEdit) return;
 
-    formData.append('nombre_producto', this.productoEdit.nombreProducto);
-    formData.append('precio', this.productoEdit.precio);
-    formData.append(`stock`, this.productoEdit.stock);
-    formData.append('categoria', this.productoEdit.categoria);
-    formData.append('formato_producto', this.productoEdit.formatoProducto);
+    const fd = new FormData();
+    fd.append('nombre_producto', this.productoEdit.nombreProducto);
+    fd.append('precio', this.productoEdit.precio.toString());
+    fd.append('stock', this.productoEdit.stock.toString());
+    fd.append('categoria', this.productoEdit.categoria);
+    fd.append('formato_producto', this.productoEdit.formatoProducto);
 
     if (this.imagenNueva) {
-      formData.append('imagen', this.imagenNueva);
+      fd.append('imagen', this.imagenNueva);
     }
 
-    this.sellerService
-      .modificarProducto(this.productoEdit.id, formData)
-      .subscribe({
-        next: () => {
-          this.modal.hide();
-          this.cargarProductos(); // 🔹 recarga la lista después de modificar
-        },
-        error: (err) => console.error('Error al modificar producto', err),
-      });
+    this.sellerService.modificarProducto(this.productoEdit.id, fd).subscribe({
+      next: () => {
+        // Actualizar lista local sin recargar
+        const index = this.productos.findIndex(
+          (p) => p.id === this.productoEdit!.id
+        );
+
+        if (index !== -1) {
+          this.productos[index] = { ...(this.productoEdit as Producto) };
+        }
+
+        this.refrescarListado();
+        this.modal.hide();
+      },
+      error: (err) => console.error('Error al modificar producto', err),
+    });
   }
 
+  /* Eliminar producto */
   borrarProducto() {
+    if (!this.productoEdit) return;
+
     this.sellerService.borrarProducto(this.productoEdit.id).subscribe({
       next: () => {
+        //1
+        // Quitar el producto de la lista SIN recargar
+        this.productos = this.productos.filter(
+          (p) => p.id !== this.productoEdit!.id
+        );
+        //2
+        this.refrescarListado();
+
+        //3
         this.modal.hide();
-        this.cargarProductos(); // 🔹 recarga la lista después de borrar
       },
-      error: (err) => console.error('Error al borrar producto', err),
+      error: (err) => {
+        console.error('Error al borrar producto', err);
+        //1
+        // Quitar el producto de la lista SIN recargar
+        this.productos = this.productos.filter(
+          (p) => p.id !== this.productoEdit!.id
+        );
+        //2
+        this.refrescarListado();
+
+        //3
+        this.modal.hide();
+      },
     });
   }
 }

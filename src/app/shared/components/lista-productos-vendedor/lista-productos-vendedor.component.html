@@ -1,5 +1,4 @@
 <div class="container mt-4">
-
   <!-- 🔎 BUSCADOR -->
   <div class="mb-3">
     <input
@@ -38,7 +37,7 @@
 
         <td>{{ p.nombreProducto }}</td>
         <td>{{ p.categoria }}</td>
-        <td>{{ p.precio | currency : 'EUR' }}</td>
+        <td>{{ p.precio | currency : "EUR" }}</td>
         <td>{{ p.stock }}</td>
         <td>{{ p.formatoProducto }}</td>
 
@@ -53,7 +52,6 @@
 
   <!-- 🌐 PAGINACIÓN -->
   <div class="d-flex justify-content-between align-items-center mt-3">
-
     <button
       class="btn btn-outline-primary"
       (click)="paginaAnterior()"
@@ -71,11 +69,10 @@
     >
       Siguiente ➡️
     </button>
-
   </div>
-  <br><br><br>
-</div>
 
+  <br /><br /><br />
+</div>
 
 <!-- MODAL -->
 <div
@@ -87,7 +84,6 @@
 >
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-
       <div class="modal-header">
         <h5 class="modal-title">Modificar producto</h5>
         <button
@@ -102,10 +98,15 @@
           <div class="row mb-3">
             <div class="col-md-4">
               <img
-                [src]="imagenPreview || ('http://localhost:8080/uploads/productos/' + productoEdit?.imagenUrl)"
+                [src]="
+                  imagenPreview ||
+                  'http://localhost:8080/uploads/productos/' +
+                    productoEdit.imagenUrl
+                "
                 class="img-fluid border rounded"
                 style="max-height: 150px; object-fit: cover"
               />
+
               <input
                 type="file"
                 class="form-control mt-2"
@@ -129,6 +130,7 @@
                 [(ngModel)]="productoEdit.precio"
                 name="precio"
               />
+
               <label class="form-label mt-3">Unidades / Stock</label>
               <input
                 type="number"
@@ -137,29 +139,48 @@
                 name="stock"
               />
 
-              <label class="form-label mt-3">Formato</label>
-              <input
-                class="form-control"
-                [(ngModel)]="productoEdit.formatoProducto"
-                name="formatoProducto"
-              />
 
-              <label class="form-label mt-3">Categoría</label>
-              <input
-                class="form-control"
-                [(ngModel)]="productoEdit.categoria"
-                name="categoria"
-              />
+              <div class="mb-3">
+                <label class="form-label">Formato</label>
+                <select
+                  class="form-select"
+                  [(ngModel)]="productoEdit.formatoProducto"
+                  name="formato"
+                >
+                  <option value="" disabled selected>
+                    Selecciona un formato
+                  </option>
+                  <option>100gr</option>
+                  <option>250gr</option>
+                  <option>500gr</option>
+                  <option>1kg</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Categoría</label>
+                <select
+                  class="form-select"
+                  [(ngModel)]="productoEdit.categoria"
+                  name="categoria"
+                >
+                  <option value="" disabled selected>
+                    Selecciona una categoría
+                  </option>
+                  <option>Embutido</option>
+                  <option>Carne</option>
+                  <option>Queso</option>
+                  <option>Fruta</option>
+                  <option>Verdura</option>
+                  <option>Cereal</option>
+                </select>
+              </div>
             </div>
           </div>
         </form>
       </div>
 
       <div class="modal-footer d-flex justify-content-between">
-        <button
-          class="btn btn-secondary"
-          data-bs-dismiss="modal"
-        >
+        <button class="btn btn-secondary" data-bs-dismiss="modal">
           Cancelar
         </button>
 
@@ -167,7 +188,6 @@
           <button class="btn btn-danger me-2" (click)="borrarProducto()">
             Borrar
           </button>
-
           <button class="btn btn-success" (click)="guardarCambios()">
             Guardar Cambios
           </button>

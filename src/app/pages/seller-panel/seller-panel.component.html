@@ -1,81 +1,141 @@
 <div class="container mt-4">
-<h2>Panel de Vendedor</h2>
-<button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#crearProductoModal">
-Crear Producto
-</button>
+  <h2>Panel de Vendedor</h2>
+  <button
+    class="btn btn-primary mt-3"
+    data-bs-toggle="modal"
+    data-bs-target="#crearProductoModal"
+  >
+    Crear Producto
+  </button>
 </div>
-<app-lista-productos-vendedor [productos]="this.listaProductos"></app-lista-productos-vendedor>
+<app-lista-productos-vendedor *ngIf="listaProductos"
+  [productos]="listaProductos"
+></app-lista-productos-vendedor>
 
 <!-- Modal Crear Producto -->
-<div class="modal fade" id="crearProductoModal" tabindex="-1" aria-hidden="true">
-<div class="modal-dialog modal-lg">
-<div class="modal-content">
+<div
+  class="modal fade"
+  id="crearProductoModal"
+  tabindex="-1"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Crear Producto</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
 
-<div class="modal-header">
-<h5 class="modal-title">Crear Producto</h5>
-<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-</div>
+      <div class="modal-body">
+        <form>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label>Nombre del producto</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="producto.nombre_producto"
+                  name="nombre"
+                />
+              </div>
 
-<div class="modal-body">
-<form>
-<div class="row">
-<div class="col-md-6">
-<div class="mb-3">
-<label>Nombre del producto</label>
-<input type="text" class="form-control" [(ngModel)]="producto.nombre_producto" name="nombre">
-</div>
+              <div class="mb-3">
+                <label>Precio</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="producto.precio"
+                  name="precio"
+                />
+              </div>
 
-<div class="mb-3">
-<label>Precio</label>
-<input type="number" class="form-control" [(ngModel)]="producto.precio" name="precio">
-</div>
+              <div class="mb-3">
+                <label>Unidades/Stock</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="producto.stock"
+                  name="stock"
+                />
+              </div>
 
-<div class="mb-3">
-  <label>Unidades/Stock</label>
-  <input type="number" class="form-control" [(ngModel)]="producto.stock" name="stock"/>
-</div>
+              <!-- Formato -->
+              <div class="mb-3">
+                <label class="form-label">Formato</label>
+                <select
+                  class="form-select"
+                  [(ngModel)]="producto.formato_producto"
+                  name="formato"
+                >
+                  <option value="" disabled selected>
+                    Selecciona un formato
+                  </option>
+                  <option>100gr</option>
+                  <option>250gr</option>
+                  <option>500gr</option>
+                  <option>1kg</option>
+                </select>
+              </div>
 
-<div class="mb-3">
-<label>Formato</label>
-<input type="text" class="form-control" [(ngModel)]="producto.formato_producto" name="formato">
-</div>
+              <div class="mb-3">
+                <label class="form-label">Categoría</label>
+                <select
+                  class="form-select"
+                  [(ngModel)]="producto.categoria"
+                  name="categoria"
+                >
+                  <option value="" disabled selected>
+                    Selecciona una categoría
+                  </option>
+                  <option>Embutido</option>
+                  <option>Carne</option>
+                  <option>Queso</option>
+                  <option>Fruta</option>
+                  <option>Verdura</option>
+                  <option>Cereal</option>
+                </select>
+              </div>
+            </div>
 
+            <div class="col-md-6">
+              <label>Imagen del Producto</label>
 
-<div class="mb-3">
-<label>Categoría</label>
-<input type="text" class="form-control" [(ngModel)]="producto.categoria" name="categoria">
-</div>
-</div>
+              <div
+                class="dropzone mt-2"
+                (dragover)="onDragOver($event)"
+                (dragleave)="onDragLeave($event)"
+                (drop)="onDrop($event)"
+              >
+                <p *ngIf="!imagen">Arrastra una imagen aquí o haz clic</p>
+                <img
+                  *ngIf="imagen"
+                  [src]="imagenPreview"
+                  class="img-fluid rounded"
+                />
 
+                <input
+                  type="file"
+                  class="d-none"
+                  #fileInput
+                  (change)="onFileSelected($event)"
+                />
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
 
-<div class="col-md-6">
-<label>Imagen del Producto</label>
-
-
-<div class="dropzone mt-2"
-(dragover)="onDragOver($event)"
-(dragleave)="onDragLeave($event)"
-(drop)="onDrop($event)">
-
-
-<p *ngIf="!imagen">Arrastra una imagen aquí o haz clic</p>
-<img *ngIf="imagen" [src]="imagenPreview" class="img-fluid rounded" />
-
-
-<input type="file" class="d-none" #fileInput (change)="onFileSelected($event)">
-</div>
-</div>
-</div>
-</form>
-</div>
-
-
-<div class="modal-footer">
-<button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-<button class="btn btn-success" (click)="crearProducto()">Crear</button>
-</div>
-
-
-</div>
-</div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">
+          Cerrar
+        </button>
+        <button class="btn btn-success" (click)="crearProducto()">Crear</button>
+      </div>
+    </div>
+  </div>
 </div>

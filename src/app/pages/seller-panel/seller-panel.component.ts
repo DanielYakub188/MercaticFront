@@ -36,7 +36,8 @@ export class SellerPanelComponent {
   cargarProductos() {
     this.vendedorService.listarProductos().subscribe({
       next: (data) => {
-        this.listaProductos = data;
+        this.listaProductos = [...data];
+        console.log('carga')
       },
       error: (err) => {
         console.error('Error al cargar la lista de productos', err);
@@ -74,7 +75,7 @@ export class SellerPanelComponent {
     reader.readAsDataURL(file);
   }
   crearProducto() {
-    // 🔥 VALIDACIÓN COMPLETA
+    //VALIDACIÓN COMPLETA
     if (
       !this.producto.nombre_producto ||
       !this.producto.precio ||
@@ -97,18 +98,16 @@ export class SellerPanelComponent {
 
     this.vendedorService.crearProducto(formData).subscribe({
       next: () => {
-        alert('Producto creado con éxito');
 
-        // 🔥 RECARGAR LISTA DE PRODUCTOS
+        //RECARGAR LISTA DE PRODUCTOS
         this.cargarProductos();
 
-        // 🔥 CERRAR MODAL
+        //CERRAR MODAL
         const modal = bootstrap.Modal.getInstance(
           document.getElementById('crearProductoModal')
         );
         modal?.hide();
-
-        // 🔥 RESETEAR FORMULARIO
+        // RESETEAR FORMULARIO
         this.producto = {
           nombre_producto: '',
           precio: null,
@@ -123,5 +122,7 @@ export class SellerPanelComponent {
         alert('Error al crear el producto');
       },
     });
+    this.cargarProductos();
   }
+
 }

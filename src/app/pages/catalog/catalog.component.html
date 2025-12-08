@@ -1,4 +1,24 @@
 <div class="container py-4">
+
   <h4 class="mb-4">Catálogo de Productos</h4>
-  <app-product-list></app-product-list>
+
+  <!-- Barra de búsqueda con ngModel moderno -->
+  <div class="mb-4">
+    <input
+      type="text"
+      class="form-control form-control-lg shadow-sm"
+      placeholder="🔍 Busca un producto..."
+      [(ngModel)]="searchText"
+      (ngModelChange)="onSearchChange($event)"
+    />
+  </div>
+
+  <!-- Mensaje cuando no hay resultados -->
+  <div *ngIf="noResultados" class="text-center text-muted my-4">
+    <p>No se encontraron productos.</p>
+  </div>
+
+  <!-- Lista de productos -->
+  <app-product-list [productos]="productos"></app-product-list>
+
 </div>
