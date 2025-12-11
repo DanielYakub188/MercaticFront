@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-success-modal',
@@ -8,7 +8,11 @@ import { Component, Input } from '@angular/core';
   styleUrl: './success-modal.component.scss'
 })
 export class SuccessModalComponent {
+  @Input() title = 'Éxito';
+  @Input() message = '';
+  @Output() close = new EventEmitter<void>();
 
-  @Input() title: string = 'Éxito';
-  @Input() message: string = 'La operación se realizó correctamente.';
+  cerrar() {
+    this.close.emit();
+  }
 }

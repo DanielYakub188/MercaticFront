@@ -1,5 +1,6 @@
 <div class="container mt-4">
   <h2>Panel de Vendedor</h2>
+
   <button
     class="btn btn-primary mt-3"
     data-bs-toggle="modal"
@@ -48,7 +49,10 @@
                   autocomplete="off"
                   #nombreInput="ngModel"
                 />
-                <div *ngIf="nombreInput.invalid && nombreInput.touched" class="text-danger mt-1">
+                <div
+                  *ngIf="nombreInput.invalid && nombreInput.touched"
+                  class="text-danger mt-1"
+                >
                   El nombre es obligatorio
                 </div>
               </div>
@@ -67,7 +71,10 @@
                   #precioInput="ngModel"
                   (keydown)="preventNegative($event)"
                 />
-                <div *ngIf="precioInput.invalid && precioInput.touched" class="text-danger mt-1">
+                <div
+                  *ngIf="precioInput.invalid && precioInput.touched"
+                  class="text-danger mt-1"
+                >
                   El precio debe ser mayor o igual a 0
                 </div>
               </div>
@@ -85,7 +92,10 @@
                   #stockInput="ngModel"
                   (keydown)="preventNegative($event)"
                 />
-                <div *ngIf="stockInput.invalid && stockInput.touched" class="text-danger mt-1">
+                <div
+                  *ngIf="stockInput.invalid && stockInput.touched"
+                  class="text-danger mt-1"
+                >
                   El stock no puede ser negativo
                 </div>
               </div>
@@ -165,9 +175,7 @@
           class="btn btn-success"
           (click)="crearProducto()"
           [disabled]="
-            productoForm.invalid ||
-            producto.precio < 0 ||
-            producto.stock < 0
+            productoForm.invalid || producto.precio < 0 || producto.stock < 0
           "
         >
           Crear
@@ -175,34 +183,74 @@
       </div>
     </div>
   </div>
+</div>
 
-  <!---Pedidos-->
-  <h2 class="mt-4">Pedidos de mis productos</h2>
+<!-- ================= FILTROS DE PEDIDOS ================= -->
+<div class="container mt-5">
+  <h2>Pedidos de mis productos</h2>
 
-<table class="table table-striped mt-3" *ngIf="pedidosVendedor.length > 0">
-  <thead>
-    <tr>
-      <th>ID Pedido</th>
-      <th>Estado</th>
-      <th>Usuario</th>
-      <th>Total (€)</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let p of pedidosVendedor">
-      <td>{{ p.id }}</td>
-      <td>{{ p.estado }}</td>
-      <td>{{ p.usuario.datosUsuario?.nombre || p.usuario.correoElectronico }}</td>
-      <td>{{ p.total | currency:"EUR" }}</td>
-      <td>
-        <button class="btn btn-primary btn-sm" (click)="abrirPedido(p)">Ver Pedido</button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+  <div class="btn-group mt-3">
+    <button
+      class="btn btn-outline-dark"
+      [class.active]="filtro === 'TODOS'"
+      (click)="aplicarFiltro('TODOS')"
+    >
+      Todos
+    </button>
+    <button
+      class="btn btn-outline-primary"
+      [class.active]="filtro === 'EN_CURSO'"
+      (click)="aplicarFiltro('EN_CURSO')"
+    >
+      En curso
+    </button>
+    <button
+      class="btn btn-outline-success"
+      [class.active]="filtro === 'FINALIZADO'"
+      (click)="aplicarFiltro('FINALIZADO')"
+    >
+      Finalizados
+    </button>
+    <button
+      class="btn btn-outline-danger"
+      [class.active]="filtro === 'CANCELADO'"
+      (click)="aplicarFiltro('CANCELADO')"
+    >
+      Cancelados
+    </button>
+  </div>
 
-<p *ngIf="pedidosVendedor.length === 0" class="mt-3">No hay pedidos para tus productos.</p>
+  <table class="table table-striped mt-3" *ngIf="pedidosFiltrados.length > 0">
+    <thead>
+      <tr>
+        <th>ID Pedido</th>
+        <th>Estado</th>
+        <th>Usuario</th>
+        <th>Total (€)</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of pedidosFiltrados">
+        <td>{{ p.id }}</td>
+        <td>{{ p.estado }}</td>
+        <td>
+          {{ p.usuario.datosUsuario?.nombre || p.usuario.correoElectronico }}
+        </td>
+        <td>{{ p.total | currency : "EUR" }}</td>
+        <td>
+          <button class="btn btn-primary btn-sm" (click)="abrirPedido(p)">
+            Ver Pedido
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="pedidosFiltrados.length === 0" class="mt-3">
+    No hay pedidos para mostrar según el filtro seleccionado.
+  </p>
+</div>
 
 <!-- Modal Pedido -->
 <div class="modal fade" id="modalPedido" tabindex="-1" aria-hidden="true">
@@ -228,30 +276,61 @@
               <td>{{ prod.nombreProducto }}</td>
               <td>{{ prod.categoria }}</td>
               <td>{{ prod.formatoProducto }}</td>
-              <td>{{ prod.precio | currency:"EUR" }}</td>
+              <td>{{ prod.precio | currency : "EUR" }}</td>
               <td>{{ prod.stock }}</td>
             </tr>
           </tbody>
         </table>
       </div>
       <div class="modal-footer" *ngIf="pedidoSeleccionado">
-        <button class="btn btn-secondary" (click)="cerrarModal()">Cerrar</button>
-        <button
-          *ngIf="pedidoSeleccionado.estado === 'EN_CURSO'"
-          class="btn btn-success"
-          (click)="finalizarPedido(pedidoSeleccionado)"
-        >
-          Finalizar Pedido
+        <button class="btn btn-secondary" (click)="cerrarModal()">
+          Cerrar
         </button>
+
         <button
           *ngIf="pedidoSeleccionado.estado === 'EN_CURSO'"
           class="btn btn-danger"
-          (click)="cancelarPedido(pedidoSeleccionado)"
+          (click)="solicitarCancelarPedido(pedidoSeleccionado)"
         >
           Cancelar Pedido
+        </button>
+        <button
+          class="btn btn-warning"
+          (click)="solicitarEliminarPedido(pedidoSeleccionado)"
+        >
+          Eliminar Pedido
+        </button>
+        <button
+          *ngIf="pedidoSeleccionado.estado === 'EN_CURSO'"
+          class="btn btn-success"
+          (click)="solicitarFinalizarPedido(pedidoSeleccionado)"
+        >
+          Finalizar Pedido
         </button>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Modal Confirmación -->
+<div class="modal fade" id="modalConfirmacion" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" style="border-radius: 14px">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirmar acción</h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        {{ mensajeConfirmacion }}
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancelar
+        </button>
+        <button class="btn btn-success" (click)="ejecutarAccionConfirmada()">
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

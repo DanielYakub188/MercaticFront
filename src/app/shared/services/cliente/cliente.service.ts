@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Producto } from '../../models/Productos';
 import { Carrito } from '../../models/Carrito';
+import { Pedido } from '../../models/Pedidos';
 
 @Injectable({
   providedIn: 'root'
@@ -37,8 +38,8 @@ eliminarDelCarrito(idProducto: number) {
     {withCredentials:true}
   );
   }
-  comprarCarrito(): Observable<any> {
-  return this.http.post(
+  comprarCarrito(): Observable<Pedido[]> {
+  return this.http.post<Pedido[]>(
     `http://localhost:8080/carrito/comprar`,
     {},
     { withCredentials: true }

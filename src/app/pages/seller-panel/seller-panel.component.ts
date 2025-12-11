@@ -16,13 +16,14 @@ declare var bootstrap: any;
   styleUrl: './seller-panel.component.scss',
 })
 export class SellerPanelComponent {
-  constructor(private vendedorService: SellerService, private pedidoService: PedidosService) {}
-
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   listaProductos: Producto[] = [];
-  listaProductoss: Producto[] = [];
   pedidosVendedor: Pedido[] = [];
+  pedidosFiltrados: Pedido[] = [];
+
+  filtro: string = 'TODOS';
+
   pedidoSeleccionado: Pedido | null = null;
   modalPedido: any;
 
@@ -31,33 +32,48 @@ export class SellerPanelComponent {
     precio: null,
     formato_producto: '',
     categoria: '',
+    stock: null,
   };
+
+  // ===== MODAL CONFIRMACIÓN =====
+  mensajeConfirmacion: string = '';
+  accionARealizar: (() => void) | null = null;
+  modalConfirmacion: any;
 
   imagen: File | null = null;
   imagenPreview: string | null = null;
 
-  ngOnInit(){
-    this.cargarProductos()
+  constructor(
+    private vendedorService: SellerService,
+    private pedidoService: PedidosService
+  ) {}
+
+  ngOnInit() {
+    this.cargarProductos();
     this.cargarPedidosVendedor();
   }
 
+  // ==================== PEDIDOS ====================
   cargarPedidosVendedor() {
-    // Obtener pedidos en curso y finalizados
-    this.pedidoService.listarPedidosEnCurso().subscribe({
-      next: (enCurso) => {
-        this.pedidoService.listarPedidosFinalizados().subscribe({
-          next: (finalizados) => {
-            const todos = [...enCurso, ...finalizados];
-            // Filtrar pedidos que contienen productos del vendedor
-            this.pedidosVendedor = todos.filter(p =>
-              p.productos.some(prod => prod.usuario.id === /* ID del vendedor actual */ 1)
-            );
-          },
-          error: () => console.error('Error cargando pedidos finalizados')
-        });
+    this.pedidoService.listarPedidosVendedor().subscribe({
+      next: (data) => {
+        this.pedidosVendedor = data.sort((a, b) => b.id - a.id);
+        this.aplicarFiltro(this.filtro);
       },
-      error: () => console.error('Error cargando pedidos en curso')
+      error: () => console.error('Error cargando pedidos del vendedor'),
     });
+  }
+
+  aplicarFiltro(estado: string) {
+    this.filtro = estado;
+
+    if (estado === 'TODOS') {
+      this.pedidosFiltrados = [...this.pedidosVendedor];
+    } else {
+      this.pedidosFiltrados = this.pedidosVendedor.filter(
+        (p) => p.estado === estado
+      );
+    }
   }
 
   abrirPedido(pedido: Pedido) {
@@ -71,14 +87,30 @@ export class SellerPanelComponent {
     if (this.modalPedido) this.modalPedido.hide();
   }
 
+  // ========= FINALIZAR CON CONFIRMACIÓN =========
+  solicitarFinalizarPedido(pedido: Pedido) {
+    this.abrirConfirmacion(
+      '¿Quieres marcar este pedido como FINALIZADO?',
+      () => this.finalizarPedido(pedido)
+    );
+  }
+
   finalizarPedido(pedido: Pedido) {
     this.pedidoService.completarPedido(pedido.id).subscribe({
       next: () => {
         this.cargarPedidosVendedor();
         this.cerrarModal();
       },
-      error: () => console.error('Error finalizando pedido')
+      error: () => console.error('Error finalizando pedido'),
     });
+  }
+
+  // ========= CANCELAR CON CONFIRMACIÓN =========
+  solicitarCancelarPedido(pedido: Pedido) {
+    this.abrirConfirmacion(
+      '¿Deseas cancelar este pedido?',
+      () => this.cancelarPedido(pedido)
+    );
   }
 
   cancelarPedido(pedido: Pedido) {
@@ -87,58 +119,46 @@ export class SellerPanelComponent {
         this.cargarPedidosVendedor();
         this.cerrarModal();
       },
-      error: () => console.error('Error cancelando pedido')
+      error: () => console.error('Error cancelando pedido'),
     });
   }
+
+  // ========= ELIMINAR CON CONFIRMACIÓN =========
+  solicitarEliminarPedido(pedido: Pedido | null) {
+    if (!pedido) return;
+
+    this.abrirConfirmacion(
+      '¿Seguro que deseas eliminar este pedido? Esta acción es irreversible.',
+      () => this.eliminarPedido(pedido)
+    );
+  }
+
+  eliminarPedido(pedido: Pedido) {
+    this.pedidoService.eliminarPedido(pedido.id).subscribe({
+      next: () => {
+        this.cargarPedidosVendedor();
+        this.cerrarModal();
+      },
+      error: () => console.error('Error eliminando el pedido'),
+    });
+  }
+
+  // ==================== PRODUCTOS ====================
   cargarProductos() {
     this.vendedorService.listarProductos().subscribe({
-      next: (data) => {
-        this.listaProductos = [...data];
-        console.log('carga')
-      },
-      error: (err) => {
-        console.error('Error al cargar la lista de productos', err);
-      },
+      next: (data) => (this.listaProductos = [...data]),
+      error: (err) =>
+        console.error('Error al cargar la lista de productos', err),
     });
   }
-  onDragOver(event: DragEvent) {
-    event.preventDefault();
-    (event.target as HTMLElement).classList.add('dragover');
-  }
 
-  onDragLeave(event: DragEvent) {
-    (event.target as HTMLElement).classList.remove('dragover');
-  }
-
-  onDrop(event: DragEvent) {
-    event.preventDefault();
-    (event.target as HTMLElement).classList.remove('dragover');
-
-    if (event.dataTransfer?.files.length) {
-      this.setImage(event.dataTransfer.files[0]);
-    }
-  }
-
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    this.setImage(file);
-  }
-
-  setImage(file: File) {
-    this.imagen = file;
-
-    const reader = new FileReader();
-    reader.onload = (e) => (this.imagenPreview = e.target?.result as string);
-    reader.readAsDataURL(file);
-  }
   crearProducto() {
-    //VALIDACIÓN COMPLETA
     if (
       !this.producto.nombre_producto ||
-      !this.producto.precio ||
+      this.producto.precio === null ||
       !this.producto.formato_producto ||
       !this.producto.categoria ||
-      !this.producto.stock ||
+      this.producto.stock === null ||
       !this.imagen
     ) {
       alert('Debes rellenar todos los campos antes de crear el producto.');
@@ -155,37 +175,75 @@ export class SellerPanelComponent {
 
     this.vendedorService.crearProducto(formData).subscribe({
       next: () => {
-
-        //RECARGAR LISTA DE PRODUCTOS
         this.cargarProductos();
-
-        //CERRAR MODAL
         const modal = bootstrap.Modal.getInstance(
           document.getElementById('crearProductoModal')
         );
         modal?.hide();
-        // RESETEAR FORMULARIO
+
         this.producto = {
           nombre_producto: '',
           precio: null,
           formato_producto: '',
           categoria: '',
-          stock: null
+          stock: null,
         };
         this.imagen = null;
         this.imagenPreview = null;
       },
-      error: () => {
-        alert('Error al crear el producto');
-      },
+      error: () => alert('Error al crear el producto'),
     });
-    this.cargarProductos();
   }
-  preventNegative(event: KeyboardEvent) {
-  // Evita escribir "-" y "e" en inputs numéricos
-  if (event.key === '-' || event.key === 'e') {
-    event.preventDefault();
-  }
-}
 
+  // ==================== IMAGEN ====================
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    (event.target as HTMLElement).classList.add('dragover');
+  }
+
+  onDragLeave(event: DragEvent) {
+    (event.target as HTMLElement).classList.remove('dragover');
+  }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    (event.target as HTMLElement).classList.remove('dragover');
+    if (event.dataTransfer?.files.length)
+      this.setImage(event.dataTransfer.files[0]);
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    this.setImage(file);
+  }
+
+  setImage(file: File) {
+    this.imagen = file;
+    const reader = new FileReader();
+    reader.onload = (e) => (this.imagenPreview = e.target?.result as string);
+    reader.readAsDataURL(file);
+  }
+
+  preventNegative(event: KeyboardEvent) {
+    if (event.key === '-' || event.key === 'e') event.preventDefault();
+  }
+
+  // ==================== MODAL CONFIRMACIÓN ====================
+  abrirConfirmacion(mensaje: string, accion: () => void) {
+    this.mensajeConfirmacion = mensaje;
+    this.accionARealizar = accion;
+
+    const modalEl = document.getElementById('modalConfirmacion');
+    this.modalConfirmacion = new bootstrap.Modal(modalEl);
+    this.modalConfirmacion.show();
+  }
+
+  ejecutarAccionConfirmada() {
+    if (this.accionARealizar) {
+      this.accionARealizar();
+    }
+    if (this.modalConfirmacion) {
+      this.modalConfirmacion.hide();
+    }
+  }
 }

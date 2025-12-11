@@ -5,11 +5,13 @@ import { FormControl, FormGroup, Validators, ReactiveFormsModule, FormsModule, A
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { passwordMatchValidator } from '../register/register.component';
-
+import { SuccessModalComponent } from '../../shared/components/success-modal/success-modal.component';
+import { ErrorModalComponent } from '../../shared/components/error-modal/error-modal.component';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-register-seller',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink,ErrorModalComponent,SuccessModalComponent],
   templateUrl: './register-seller.component.html',
   styleUrl: './register-seller.component.scss'
 })
@@ -28,7 +30,11 @@ export class RegisterSellerComponent {
   registrationError: string | null = null;
   registrationSuccess: boolean = false;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
+  onSuccessModalClose() {
+  this.registrationSuccess = false; // Oculta el modal
+  this.router.navigate(['/login']); // Redirige a login
+}
 
   onSubmit() {
     if (this.registerForm.valid) {
@@ -42,11 +48,12 @@ export class RegisterSellerComponent {
         password: this.registerForm.value.password!
       };
 
-      this.authService.register(registerRequest).subscribe({
+      this.authService.registerSeller(registerRequest).subscribe({
         next: (res) => {
           this.registrationSuccess = true;
           this.registrationError = null;
           console.log('Usuario registrado correctamente:', res);
+          this.router.navigate(['/login']);
         },
         error: (err) => {
           this.registrationError = err.error || 'Error al registrar usuario';

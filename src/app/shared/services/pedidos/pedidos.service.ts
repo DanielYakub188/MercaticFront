@@ -36,7 +36,14 @@ export class PedidosService {
   listarPedidosFinalizados(): Observable<Pedido[]> {
     return this.http.get<Pedido[]>(`${this.baseUrl}/finalizados`, { withCredentials: true });
   }
-  crearPedidoDesdeCarrito(): Observable<Pedido> {
-  return this.http.post<Pedido>(`${this.baseUrl}/crear`, {}, { withCredentials: true });
+
+  // Listar pedidos que contienen productos del vendedor logueado
+  listarPedidosVendedor(): Observable<Pedido[]> {
+    return this.http.get<Pedido[]>(`${this.baseUrl}/mis-productos`, { withCredentials: true });
+  }
+
+  //Eliminar pedido
+  eliminarPedido(idPedido: number): Observable<boolean> {
+  return this.http.delete<boolean>(`${this.baseUrl}/eliminar/${idPedido}`, { withCredentials: true });
 }
 }

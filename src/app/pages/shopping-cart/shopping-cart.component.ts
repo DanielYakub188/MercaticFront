@@ -72,28 +72,24 @@ export class ShoppingCartComponent implements OnInit {
     });
   }
 
-  comprarCarrito() {
-    if (
-      this.carrito.length === 0 ||
-      this.totalCarrito() + this.envio > this.balanceCuenta
-    )
-      return;
+comprarCarrito() {
+  if (this.carrito.length === 0 || this.totalCarrito() + this.envio > this.balanceCuenta)
+    return;
 
-    this.comprando = true;
+  this.comprando = true;
 
-    this.clienteService.comprarCarrito().subscribe({
-      next: (pedidoCreado) => {
-        console.log('Pedido creado:', pedidoCreado);
-        // Vaciar carrito local
-        this.carrito = [];
-        this.comprando = false;
-      },
-      error: () => {
-        console.error('Error al crear pedido desde carrito');
-        this.comprando = false;
-      },
-    });
-  }
+  this.clienteService.comprarCarrito().subscribe({
+    next: (pedidosCreados) => {
+      console.log('Pedidos creados:', pedidosCreados);
+      this.carrito = []; // vaciar carrito local
+      this.comprando = false;
+    },
+    error: () => {
+      console.error('Error al crear pedidos desde carrito');
+      this.comprando = false;
+    }
+  });
+}
 
   totalCarrito(): number {
     return this.carrito.reduce(
