@@ -4,7 +4,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Producto } from '../../shared/models/Productos';
 import { ListaProductosVendedorComponent } from '../../shared/components/lista-productos-vendedor/lista-productos-vendedor.component';
+import { PedidosService } from '../../shared/services/pedidos/pedidos.service';
+import { Pedido } from '../../shared/models/Pedidos';
 declare var bootstrap: any;
+
 @Component({
   selector: 'app-seller-panel',
   standalone: true,
@@ -13,11 +16,15 @@ declare var bootstrap: any;
   styleUrl: './seller-panel.component.scss',
 })
 export class SellerPanelComponent {
-  constructor(private vendedorService: SellerService) {}
+  constructor(private vendedorService: SellerService, private pedidoService: PedidosService) {}
 
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   listaProductos: Producto[] = [];
+  listaProductoss: Producto[] = [];
+  pedidosVendedor: Pedido[] = [];
+  pedidoSeleccionado: Pedido | null = null;
+  modalPedido: any;
 
   producto: any = {
     nombre_producto: '',
@@ -31,8 +38,58 @@ export class SellerPanelComponent {
 
   ngOnInit(){
     this.cargarProductos()
+    this.cargarPedidosVendedor();
   }
 
+  cargarPedidosVendedor() {
+    // Obtener pedidos en curso y finalizados
+    this.pedidoService.listarPedidosEnCurso().subscribe({
+      next: (enCurso) => {
+        this.pedidoService.listarPedidosFinalizados().subscribe({
+          next: (finalizados) => {
+            const todos = [...enCurso, ...finalizados];
+            // Filtrar pedidos que contienen productos del vendedor
+            this.pedidosVendedor = todos.filter(p =>
+              p.productos.some(prod => prod.usuario.id === /* ID del vendedor actual */ 1)
+            );
+          },
+          error: () => console.error('Error cargando pedidos finalizados')
+        });
+      },
+      error: () => console.error('Error cargando pedidos en curso')
+    });
+  }
+
+  abrirPedido(pedido: Pedido) {
+    this.pedidoSeleccionado = pedido;
+    const modalEl = document.getElementById('modalPedido');
+    this.modalPedido = new bootstrap.Modal(modalEl);
+    this.modalPedido.show();
+  }
+
+  cerrarModal() {
+    if (this.modalPedido) this.modalPedido.hide();
+  }
+
+  finalizarPedido(pedido: Pedido) {
+    this.pedidoService.completarPedido(pedido.id).subscribe({
+      next: () => {
+        this.cargarPedidosVendedor();
+        this.cerrarModal();
+      },
+      error: () => console.error('Error finalizando pedido')
+    });
+  }
+
+  cancelarPedido(pedido: Pedido) {
+    this.pedidoService.cancelarPedido(pedido.id).subscribe({
+      next: () => {
+        this.cargarPedidosVendedor();
+        this.cerrarModal();
+      },
+      error: () => console.error('Error cancelando pedido')
+    });
+  }
   cargarProductos() {
     this.vendedorService.listarProductos().subscribe({
       next: (data) => {
@@ -124,5 +181,11 @@ export class SellerPanelComponent {
     });
     this.cargarProductos();
   }
+  preventNegative(event: KeyboardEvent) {
+  // Evita escribir "-" y "e" en inputs numéricos
+  if (event.key === '-' || event.key === 'e') {
+    event.preventDefault();
+  }
+}
 
 }

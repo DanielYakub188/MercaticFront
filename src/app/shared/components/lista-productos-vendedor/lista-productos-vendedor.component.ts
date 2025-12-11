@@ -75,7 +75,11 @@ export class ListaProductosVendedorComponent {
 
     this.productosPaginados = this.productosFiltrados.slice(inicio, fin);
   }
-
+  preventNegative(event: KeyboardEvent) {
+  if (event.key === '-' || event.key === 'e') {
+    event.preventDefault();
+  }
+}
   paginaAnterior() {
     if (this.paginaActual > 0) {
       this.paginaActual--;

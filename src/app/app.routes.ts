@@ -13,6 +13,7 @@ import { ShoppingCartComponent } from './pages/shopping-cart/shopping-cart.compo
 import { AdminPanelComponent } from './pages/admin-panel/admin-panel.component';
 import { SellerPanelComponent } from './pages/seller-panel/seller-panel.component';
 import { RegisterSellerComponent } from './pages/register-seller/register-seller.component';
+import { PedidosComponent } from './pages/pedidos/pedidos.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent }, // Página principal
@@ -25,6 +26,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   {path:'register',component: RegisterComponent},
   {path:'registro-vendedor',component:RegisterSellerComponent},
+  {path:'pedidos', component: PedidosComponent},
 
   {path:'panel-administrador',component:AdminPanelComponent},
   {path:'panel-vendedor',component:SellerPanelComponent},

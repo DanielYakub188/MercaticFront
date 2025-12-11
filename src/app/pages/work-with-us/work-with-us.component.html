@@ -1,1 +1,155 @@
-<p>work-with-us works!</p>
+<div class="work-with-us">
+
+  <!-- HERO -->
+  <header class="hero container-fluid py-5">
+    <div class="container">
+      <div class="row align-items-center gy-4">
+        <div class="col-lg-6">
+          <small class="badge bg-success rounded-pill mb-2">Únete a Mercatic</small>
+          <h1 class="display-5 fw-bold">Vende con libertad. Crece con Mercatic.</h1>
+          <p class="lead text-muted mb-4">
+            Conecta tu catálogo con miles de clientes, controla precios, y accede a herramientas pensadas para aumentar tus ventas.
+          </p>
+
+          <div class="d-flex gap-2">
+            <a routerLink="/registro-vendedor" class="btn btn-success btn-lg">
+              Registrarme como vendedor
+            </a>
+          </div>
+
+          <ul class="mt-4 list-unstyled d-flex gap-4">
+            <li class="small text-muted"><strong>🚀</strong> Crecimiento</li>
+            <li class="small text-muted"><strong>💳</strong> Pagos seguros</li>
+            <li class="small text-muted"><strong>📊</strong> Analytics</li>
+          </ul>
+        </div>
+
+        <div class="col-lg-6 text-center">
+          <!-- Ilustración hero — reemplaza por tu ilustración/imagen -->
+          <img class="img-fluid hero-illu" src="https://picsum.photos/seed/mercatic-hero/1000/600" alt="Vendedor Mercatic">
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- BENEFICIOS -->
+  <section id="benefits" class="container py-5">
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+          <img src="https://picsum.photos/seed/catalog/600/360" class="card-img-top" alt="Catálogo">
+          <div class="card-body">
+            <h5 class="card-title">Control total de tu catálogo</h5>
+            <p class="card-text text-muted">Administra stock, precios y promociones desde una interfaz simple.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+          <img src="https://picsum.photos/seed/payments/600/360" class="card-img-top" alt="Pagos">
+          <div class="card-body">
+            <h5 class="card-title">Pagos rápidos y protegidos</h5>
+            <p class="card-text text-muted">Múltiples métodos de pago y liquidaciones claras y seguras.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+          <img src="https://picsum.photos/seed/support/600/360" class="card-img-top" alt="Soporte">
+          <div class="card-body">
+            <h5 class="card-title">Soporte y formación</h5>
+            <p class="card-text text-muted">Materiales, webinars y soporte personalizado para mejorar conversiones.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PASOS PARA EMPEZAR -->
+  <section class="steps bg-light py-5">
+    <div class="container">
+      <div class="text-center mb-4">
+        <h2 class="h3 fw-bold">Empieza en 3 pasos</h2>
+        <p class="text-muted">Rápido, sencillo y listo para vender.</p>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="p-4 text-center card h-100 border-0 shadow-sm">
+            <div class="step-number mb-3">1</div>
+            <h5>Regístrate</h5>
+            <p class="text-muted">Crea tu cuenta y completa tu perfil.</p>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="p-4 text-center card h-100 border-0 shadow-sm">
+            <div class="step-number mb-3">2</div>
+            <h5>Sube tus productos</h5>
+            <p class="text-muted">Carga fotos, descripciones y precios en minutos.</p>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="p-4 text-center card h-100 border-0 shadow-sm">
+            <div class="step-number mb-3">3</div>
+            <h5>Comienza a vender</h5>
+            <p class="text-muted">Recibe pedidos, gestiona envíos y cobra tus ventas.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIOS -->
+  <section class="container py-5">
+    <div class="row">
+      <div class="col-lg-6">
+        <h3 class="fw-bold">Historias reales</h3>
+        <p class="text-muted">Vendedores que crecieron con Mercatic.</p>
+      </div>
+      <div class="col-lg-6">
+        <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <blockquote class="blockquote mb-0">
+                <p>"En 3 meses mis ventas aumentaron un 40%. La interfaz y el soporte me ayudaron mucho."</p>
+                <footer class="blockquote-footer">Ana G., <cite title="Company">Tienda Ana</cite></footer>
+              </blockquote>
+            </div>
+            <div class="carousel-item">
+              <blockquote class="blockquote mb-0">
+                <p>"Integrar mis productos fue sencillo y el equipo me asesoró en marketing."</p>
+                <footer class="blockquote-footer">Carlos M., <cite title="Company">ElectroCasa</cite></footer>
+              </blockquote>
+            </div>
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Anterior</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Siguiente</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <footer class="cta-footer py-5 bg-success text-white">
+    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+      <div>
+        <h4 class="mb-1 fw-bold">Listo para comenzar?</h4>
+        <p class="mb-0 text-white-50">Regístrate hoy y recibe asesoría de onboarding gratuita.</p>
+      </div>
+      <div>
+        <a routerLink="/registro-vendedor" class="btn btn-light btn-lg">Crear cuenta de vendedor</a>
+      </div>
+    </div>
+  </footer>
+
+</div>

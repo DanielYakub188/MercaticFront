@@ -2,6 +2,59 @@
 
   <h4 class="mb-4">Catálogo de Productos</h4>
 
+  <!-- Botones de filtro por categoría -->
+  <div class="mb-3 d-flex flex-wrap gap-2">
+    <button
+      class="btn btn-outline-primary"
+      [class.active]="categoriaSeleccionada === ''"
+      (click)="filtrarPorCategoria('')"
+    >
+      Todos
+    </button>
+    <button
+      class="btn btn-outline-primary"
+      [class.active]="categoriaSeleccionada === 'Embutido'"
+      (click)="filtrarPorCategoria('Embutido')"
+    >
+      Embutido
+    </button>
+    <button
+      class="btn btn-outline-primary"
+      [class.active]="categoriaSeleccionada === 'Carne'"
+      (click)="filtrarPorCategoria('Carne')"
+    >
+      Carne
+    </button>
+    <button
+      class="btn btn-outline-primary"
+      [class.active]="categoriaSeleccionada === 'Queso'"
+      (click)="filtrarPorCategoria('Queso')"
+    >
+      Queso
+    </button>
+    <button
+      class="btn btn-outline-primary"
+      [class.active]="categoriaSeleccionada === 'Fruta'"
+      (click)="filtrarPorCategoria('Fruta')"
+    >
+      Fruta
+    </button>
+    <button
+      class="btn btn-outline-primary"
+      [class.active]="categoriaSeleccionada === 'Verdura'"
+      (click)="filtrarPorCategoria('Verdura')"
+    >
+      Verdura
+    </button>
+    <button
+      class="btn btn-outline-primary"
+      [class.active]="categoriaSeleccionada === 'Cereal'"
+      (click)="filtrarPorCategoria('Cereal')"
+    >
+      Cereal
+    </button>
+  </div>
+
   <!-- Barra de búsqueda con ngModel moderno -->
   <div class="mb-4">
     <input

@@ -21,6 +21,8 @@ export class CatalogComponent implements OnInit {
   searchText: string = "";
   private searchSubject = new Subject<string>();
 
+  categoriaSeleccionada: string = ""; // '' significa todos
+
   constructor(private clienteService: ClienteService) {
     this.searchSubject
       .pipe(debounceTime(300))
@@ -36,12 +38,22 @@ export class CatalogComponent implements OnInit {
     this.searchSubject.next(value);
   }
 
+  filtrarPorCategoria(categoria: string) {
+    this.categoriaSeleccionada = categoria;
+    this.buscarProductos(this.searchText); // vuelve a filtrar
+  }
+
   private buscarProductos(nombre: string) {
     this.clienteService.recogerProductosBusqueda(nombre)
       .subscribe({
         next: res => {
-          this.productos = res;
-          this.noResultados = (res.length === 0);
+          // filtrar por categoría si hay alguna seleccionada
+          if (this.categoriaSeleccionada) {
+            this.productos = res.filter(p => p.categoria === this.categoriaSeleccionada);
+          } else {
+            this.productos = res;
+          }
+          this.noResultados = (this.productos.length === 0);
         },
         error: err => console.error(err)
       });

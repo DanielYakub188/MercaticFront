@@ -37,4 +37,17 @@ eliminarDelCarrito(idProducto: number) {
     {withCredentials:true}
   );
   }
+  comprarCarrito(): Observable<any> {
+  return this.http.post(
+    `http://localhost:8080/carrito/comprar`,
+    {},
+    { withCredentials: true }
+  );
+}
+obtenerBalance(): Observable<number> {
+  return this.http.get<number>(
+    'http://localhost:8080/cliente/balance',
+    { withCredentials: true }
+  );
+}
 }
