@@ -1,3 +1,4 @@
+import { ClienteService } from './../../../services/cliente/cliente.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { Producto } from '../../../models/Productos';
 import { CommonModule } from '@angular/common';
@@ -12,6 +13,7 @@ declare var bootstrap: any;
   styleUrl: './product-list.component.scss',
 })
 export class ProductListComponent implements OnInit {
+  constructor(private ClienteService: ClienteService) {}
 
   @Input() productos: Producto[] = [];
 
@@ -23,7 +25,7 @@ export class ProductListComponent implements OnInit {
   private modalNoLogin: any;
 
   ngOnInit(): void {
-    this.usuarioLogeado = !!localStorage.getItem("usuario");
+    this.usuarioLogeado = !!localStorage.getItem('id');
   }
 
   get productosVisibles(): Producto[] {
@@ -46,9 +48,26 @@ export class ProductListComponent implements OnInit {
       return;
     }
 
-    console.log("Producto añadido al carrito:", producto);
+    this.ClienteService.añadirProductoCarrito(producto.id, 1).subscribe({
+      next: () => {
+        console.log(`Producto añadido correctamente, Producto: ${producto.id}`)
+        this.animacionAñadido(producto.id);
+      },
+      error: () => {
+        console.error('Error añadiendo al carrito');
+      },
+    });
+  }
 
-    // Aquí luego puedes meter el servicio de carrito real
+  animacionAñadido(idProducto: number) {
+    const card = document.getElementById('card-' + idProducto);
+    if (!card) return;
+
+    card.classList.add('added');
+
+    setTimeout(() => {
+      card.classList.remove('added');
+    }, 900);
   }
 
   abrirModalNoLogin() {

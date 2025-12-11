@@ -1,1 +1,73 @@
-<p>shopping-cart works!</p>
+
+
+
+<div class="container mt-4">
+  <h2 class="mb-4">Mi Carrito</h2>
+  <h4 class="mb-4">Productos:</h4>
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Imagen</th>
+      <th>Producto</th>
+      <th>Categoría</th>
+      <th>Formato</th>
+      <th>Precio</th>
+      <th>Unidades</th>
+      <th>Eliminar</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let item of carrito">
+      <!-- IMAGEN -->
+      <td>
+        <img
+          [src]="
+            'http://localhost:8080/uploads/productos/' + item.producto.imagenUrl
+          "
+          alt="img"
+          width="70"
+          height="70"
+          style="object-fit: cover; border-radius: 6px"
+        />
+      </td>
+
+      <!-- NOMBRE -->
+      <td>{{ item.producto.nombreProducto }}</td>
+
+      <!-- CATEGORÍA -->
+      <td>{{ item.producto.categoria }}</td>
+
+      <!-- FORMATO -->
+      <td>{{ item.producto.formatoProducto }}</td>
+
+      <!-- PRECIO -->
+      <td>{{ item.producto.precio | currency : "EUR" }}</td>
+
+      <!-- UNIDADES -->
+      <td>
+        <button class="btn btn-secondary btn-sm" (click)="restarUnidad(item)">
+          -
+        </button>
+
+        <span class="mx-2">{{ item.unidades }}</span>
+
+        <button class="btn btn-secondary btn-sm" (click)="sumarUnidad(item)">
+          +
+        </button>
+      </td>
+
+      <!-- BORRAR -->
+      <td>
+        <button class="btn btn-danger btn-sm" (click)="eliminar(item)">
+          X
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<p *ngIf="carrito.length === 0" class="text-center mt-4">
+  No hay productos en el carrito.
+</p>
+</div>

@@ -4,55 +4,57 @@
     <!-- Formulario -->
     <div class="col-lg-6 p-4 bg-white position-relative">
       <div class="text-center mb-3">
-        <h2 class="text-success fw-bold fs-4">Registro de cliente</h2>
+        <h2 class="text-success fw-bold fs-4">Registro de vendedor</h2>
       </div>
 
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
-        <!-- Nombre -->
+
+        <!-- Nombre del negocio -->
         <div class="mb-3 fixed-height">
-          <label for="nombre" class="form-label text-success small">Nombre</label>
+          <label for="nombre" class="form-label text-success small">Nombre del vendedor</label>
           <input type="text" id="nombre" class="form-control ps-3" formControlName="nombre" />
           <div *ngIf="nombre?.invalid && nombre?.touched" class="text-danger smaller mt-1">
             Mínimo 2 caracteres.
           </div>
         </div>
 
-        <!-- Apellidos -->
+        <!-- Primer apellido del responsable -->
         <div class="row gx-2">
           <div class="mb-3 col-md-6 fixed-height">
-            <label for="apellido1" class="form-label text-success small">Primer apellido</label>
+            <label for="apellido1" class="form-label text-success small">Responsable - Apellido 1</label>
             <input type="text" id="apellido1" class="form-control ps-3" formControlName="apellido1" />
             <div *ngIf="apellido1?.invalid && apellido1?.touched" class="text-danger smaller mt-1">
               Obligatorio.
             </div>
           </div>
+
           <div class="mb-3 col-md-6 fixed-height">
-            <label for="apellido2" class="form-label text-success small">Segundo apellido</label>
+            <label for="apellido2" class="form-label text-success small">Responsable - Apellido 2</label>
             <input type="text" id="apellido2" class="form-control ps-3" formControlName="apellido2" />
           </div>
         </div>
 
         <!-- Localidad -->
         <div class="mb-3 fixed-height">
-          <label for="localidad" class="form-label text-success small">Localidad</label>
+          <label for="localidad" class="form-label text-success small">Localidad del negocio</label>
           <input type="text" id="localidad" class="form-control ps-3" formControlName="localidad" />
           <div *ngIf="localidad?.invalid && localidad?.touched" class="text-danger smaller mt-1">
             Obligatorio.
           </div>
         </div>
 
-        <!-- Dirección -->
+        <!-- Dirección del negocio -->
         <div class="mb-3 fixed-height">
-          <label for="direccion" class="form-label text-success small">Dirección</label>
+          <label for="direccion" class="form-label text-success small">Dirección comercial</label>
           <input type="text" id="direccion" class="form-control ps-3" formControlName="direccion" />
           <div *ngIf="direccion?.invalid && direccion?.touched" class="text-danger smaller mt-1">
             Obligatorio.
           </div>
         </div>
 
-        <!-- Correo -->
+        <!-- Email -->
         <div class="mb-3 fixed-height">
-          <label for="email" class="form-label text-success small">Correo electrónico</label>
+          <label for="email" class="form-label text-success small">Correo del negocio</label>
           <input type="email" id="email" class="form-control ps-3" formControlName="email" />
           <div *ngIf="email?.invalid && email?.touched" class="text-danger smaller mt-1">
             Correo inválido.
@@ -68,6 +70,7 @@
               Mínimo 6 caracteres.
             </div>
           </div>
+
           <div class="mb-3 col-md-6 fixed-height">
             <label for="confirmPassword" class="form-label text-success small">Repetir contraseña</label>
             <input type="password" id="confirmPassword" class="form-control ps-3" formControlName="confirmPassword" />
@@ -79,25 +82,23 @@
 
         <!-- Botón -->
         <button type="submit" class="btn btn-success w-100 py-2 fs-6" [disabled]="registerForm.invalid">
-          Registrarse
+          Registrarse como vendedor
         </button>
 
         <!-- Link a login -->
         <p class="mt-3 text-center text-muted small">
-          ¿Ya tienes cuenta?
+          ¿Ya eres vendedor?
           <a routerLink="/login" class="text-success fw-semibold small">Inicia sesión</a>
         </p>
-        <p class="mt-3 text-center text-muted small">
-          Registrese como vendedor:
-          <a routerLink="/registro-vendedor" class="text-success fw-semibold small">Registro</a>
-        </p>
+
+
       </form>
     </div>
 
     <!-- Imagen decorativa -->
     <div class="col-lg-6 d-none d-lg-block p-0">
-      <img src="../../../assets/banner2.jpeg"
-           alt="Mercadona"
+      <img src="../../../assets/vendedorp.webp"
+           alt="Vendedor"
            class="img-fluid h-100 w-100 object-fit-cover mercadona-image" />
     </div>
   </div>

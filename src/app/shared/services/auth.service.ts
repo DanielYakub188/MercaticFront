@@ -27,7 +27,14 @@ export class AuthService {
       { withCredentials: true } // ✅ también en el registro
     );
   }
-
+  registerSeller(registerRequest:Register): Observable<string>
+  {
+        return this.http.post<string>(
+      `http://localhost:8080/api/auth/registerSeller`,
+      registerRequest,
+      { withCredentials: true } // ✅ también en el registro
+    );
+  }
   private loggedIn = new BehaviorSubject<boolean>(this.hasToken());
   authStatus$ = this.loggedIn.asObservable();
 
